@@ -86,6 +86,15 @@ int main(){
 						if(nj >= 0){ up = id[nj][ni]; }
 						if(up >= 0){
 							id[j][i] = up;
+
+							ni--;
+							nj++;
+							if(ni >= 0){
+								left = id[nj][ni];
+								if(left >= 0){
+									label[left] = label[up];
+								}
+							}
 						}
 						else{
 							// [ ] [ ] [+]
@@ -94,6 +103,15 @@ int main(){
 							if(ni < size.width && nj >= 0){ up_right = id[nj][ni]; }
 							if(up_right >= 0){
 								id[j][i] = up_right;
+
+								ni -= 2;
+								nj++;
+								if(ni >= 0){
+									left = id[nj][ni];
+									if(left >= 0){
+										label[left] = label[up_right];
+									}
+								}
 							}
 							else{
 								// [ ] [ ] [ ]
@@ -101,7 +119,7 @@ int main(){
 								ni -= 2;
 								nj++;
 								if(ni >= 0){ left = id[nj][ni]; }
-								if(up >= 0){
+								if(left >= 0){
 									id[j][i] = left;
 								}
 								else{
@@ -114,9 +132,6 @@ int main(){
 												unif(rnd_mt));
 										label_source.push_back(col);
 										label.push_back(col);
-//										for(int k = 0; k < (int)label.size(); k++){ 
-//											std::cout << label[k] << std::endl;
-//										}
 									}
 									id[j][i] = last_lab;
 								}
@@ -145,6 +160,18 @@ int main(){
 
 		cv::imshow(windowName, result);
 //		while(cv::waitKey(1) != 113){}
+	}
+
+	std::cout << "Labels" << std::endl;
+	for(int k = 0; k <= last_lab; k++){
+		std::cout << k << " : " << label[k] << std::endl;
+	}
+
+	for(int j = 0; j < size.height; j++){
+		for(int i = 0; i < size.width; i++){
+			std::cout << id[j][i] << " " << std::ends;
+		}
+		std::cout << std::endl;
 	}
 
 	//cv::destroyAllWindows();
