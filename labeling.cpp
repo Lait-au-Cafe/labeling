@@ -1,6 +1,8 @@
 #include <iostream>
 #include "opencv2/opencv.hpp"
 
+typedef unsigned char uchar;
+
 int main(){
 	cv::VideoCapture capture(0);
 	
@@ -19,18 +21,22 @@ int main(){
 
 	result = frame.clone();
 
+	const uchar thresh = 128;
+	cv::Vec3b col;
 	while(cv::waitKey(1) != 113){
 		capture >> frame;
 
 		for(int j = 0; j < size.height; j++){
-
 			for(int i = 0; i < size.width; i++){
-				std::cout << frame.at<cv::Vec3b>(j, i) << std::endl;
-
+				col = frame.at<cv::Vec3b>(j, i);
+				col = (col[0] + col[1] + col[2]) / 3 > thresh ?
+						cv::Vec3b(255, 255, 255) : cv::Vec3b(0, 0, 0);
+				result.at<cv::Vec3b>(j, i) = col;
 			}
 		}
 
-		cv::imshow(windowName, frame);
+
+		cv::imshow(windowName, result);
 	}
 
 	cv::destroyAllWindows();
